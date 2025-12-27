@@ -37,10 +37,10 @@ export default function Navbar() {
         onMouseLeave={() => setHover(false)}
       >
         <Image
-          src="/logo/logo.png"
+          src="/logo/logo2.png"
           alt="MineRise Logo"
-          width={44}
-          height={44}
+          width={50}
+          height={50}
           priority
           style={{
             transition: "filter 0.3s ease",
