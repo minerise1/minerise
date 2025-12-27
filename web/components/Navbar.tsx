@@ -9,11 +9,8 @@ export default function Navbar() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
 
-  // Detect scroll
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -23,16 +20,17 @@ export default function Navbar() {
       style={{
         ...nav,
         background: scrolled
-          ? "rgba(11,11,18,0.95)"
-          : "rgba(11,11,18,0.6)",
+          ? "rgba(11,11,18,0.96)"
+          : "rgba(11,11,18,0.65)",
         boxShadow: scrolled
-          ? "0 10px 30px rgba(0,0,0,0.4)"
+          ? "0 10px 30px rgba(0,0,0,0.6)"
           : "none",
       }}
     >
       {/* LOGO */}
       <div style={logo} onClick={() => router.push("/")}>
-        MineRise
+        <span style={logoRed}>Mine</span>
+        <span style={logoGreen}>Rise</span>
       </div>
 
       {/* LINKS */}
@@ -51,7 +49,7 @@ export default function Navbar() {
   );
 }
 
-/* ================= LINK COMPONENT ================= */
+/* ================= LINK ================= */
 
 function NavLink({
   href,
@@ -67,7 +65,7 @@ function NavLink({
       href={href}
       style={{
         ...link,
-        color: active ? "#fff" : "#cfcfe8",
+        color: active ? "#fff" : "#cbd5e1",
       }}
     >
       {children}
@@ -93,25 +91,31 @@ const nav = {
   alignItems: "center",
   padding: "16px 48px",
   backdropFilter: "blur(14px)",
-  borderBottom: "1px solid rgba(255,255,255,0.06)",
+  borderBottom: "1px solid rgba(255,255,255,0.05)",
   transition: "all 0.3s ease",
 };
 
 const logo = {
-  fontSize: 22,
-  fontWeight: 800,
-  letterSpacing: "0.5px",
+  fontSize: 24,
+  fontWeight: 900,
   cursor: "pointer",
-  background: "linear-gradient(90deg,#9333ea,#ec4899)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  textShadow: "0 0 20px rgba(168,85,247,0.4)",
+  letterSpacing: "0.5px",
+};
+
+const logoRed = {
+  color: "#b11212",
+  textShadow: "0 0 12px rgba(177,18,18,0.6)",
+};
+
+const logoGreen = {
+  color: "#22c55e",
+  marginLeft: 2,
+  textShadow: "0 0 12px rgba(34,197,94,0.6)",
 };
 
 const links = {
   display: "flex",
-  gap: 28,
-  alignItems: "center",
+  gap: 30,
 };
 
 const link = {
@@ -120,7 +124,6 @@ const link = {
   fontSize: 15,
   fontWeight: 500,
   padding: "6px 2px",
-  transition: "color 0.2s ease",
 };
 
 const underline = {
@@ -129,7 +132,8 @@ const underline = {
   bottom: -4,
   width: "100%",
   height: 2,
-  background: "linear-gradient(90deg,#9333ea,#ec4899)",
+  background:
+    "linear-gradient(90deg,#b11212,#22c55e)",
   transformOrigin: "left",
   transition: "all 0.25s ease",
 };
