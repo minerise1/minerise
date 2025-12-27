@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/footer";
 
-/* ================= DATA ================= */
+
 
 const slides = [
   { title: "VIP Rank", desc: "Permanent rank with exclusive perks" },
@@ -12,7 +12,6 @@ const slides = [
   { title: "Bundles", desc: "Best value combined packages" },
 ];
 
-/* ================= PAGE ================= */
 
 export default function Home() {
   const [index, setIndex] = useState(1);
@@ -25,13 +24,11 @@ export default function Home() {
   const next = () =>
     setIndex((i) => (i === slides.length - 1 ? 0 : i + 1));
 
-  /* 🔁 AUTO SLIDE */
   useEffect(() => {
     const interval = setInterval(next, 3500);
     return () => clearInterval(interval);
   }, []);
 
-  /* ⌨️ KEYBOARD */
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") prev();
@@ -54,7 +51,7 @@ export default function Home() {
     }, 500); // throttle
   }
 
-  /* 📱 MOBILE SWIPE */
+  
   const onTouchStart = (e: React.TouchEvent) =>
     (startX.current = e.touches[0].clientX);
 
@@ -68,7 +65,7 @@ export default function Home() {
 
   return (
     <main style={page}>
-      {/* ================= HERO ================= */}
+      
       <section style={hero}>
         <h1 style={heroTitle}>MineRise Store</h1>
         <p style={heroSubtitle}>
@@ -79,7 +76,7 @@ export default function Home() {
           style={carousel}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          onWheel={onWheel}   // 👈 SCROLL WHEEL HERE
+          onWheel={onWheel}   
         >
           <button onClick={prev} style={arrow}>‹</button>
 
@@ -100,7 +97,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= INFO ================= */}
+      
       <section style={layer}>
         <div style={section}>
           <h2 style={sectionTitle}>What is MineRise?</h2>
@@ -112,7 +109,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
+     
       <section style={layer}>
         <div style={features}>
           <Feature title="Instant Delivery" text="Items delivered immediately." />
@@ -121,7 +118,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= CTA ================= */}
+    
       <section style={ctaSection}>
         <h2 style={{ fontSize: 38, marginBottom: 12 }}>
           Ready to power up your gameplay?
@@ -139,7 +136,7 @@ export default function Home() {
   );
 }
 
-/* ================= COMPONENTS ================= */
+
 
 function Feature({ title, text }: { title: string; text: string }) {
   return (
@@ -204,7 +201,7 @@ function TiltCard({
   );
 }
 
-/* ================= HELPERS ================= */
+
 
 const baseTransform = (active: boolean, offset: number) => `
   translateX(${offset * 280}px)
@@ -212,7 +209,7 @@ const baseTransform = (active: boolean, offset: number) => `
   rotateY(${offset * -25}deg)
 `;
 
-/* ================= STYLES ================= */
+
 
 const page = { background: "#0b0b12", color: "white" };
 

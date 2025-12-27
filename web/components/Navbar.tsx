@@ -29,7 +29,7 @@ export default function Navbar() {
           : "none",
       }}
     >
-      {/* LOGO */}
+     
       <div
         style={logoWrap}
         onClick={() => router.push("/")}
@@ -51,7 +51,7 @@ export default function Navbar() {
         />
       </div>
 
-      {/* LINKS */}
+   
       <div style={links}>
         <NavLink href="/products" active={pathname === "/products"}>
           Store
@@ -67,7 +67,7 @@ export default function Navbar() {
   );
 }
 
-/* ================= LINK ================= */
+
 
 function NavLink({
   href,
@@ -98,7 +98,6 @@ function NavLink({
   );
 }
 
-/* ================= STYLES ================= */
 
 const nav = {
   position: "sticky" as const,
