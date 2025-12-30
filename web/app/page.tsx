@@ -30,13 +30,15 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const h = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();~
-    };
-    window.addEventListener("keydown", h);
-    return () => window.removeEventListener("keydown", h);
-  }, []);
+  const h = (e: any) => {
+    if (e.key === "ArrowLeft") prev();
+    if (e.key === "ArrowRight") next();
+  };
+
+  window.addEventListener("keydown", h);
+  return () => window.removeEventListener("keydown", h);
+}, []);
+
 
   function onWheel(e: React.WheelEvent) {
     if (wheelLock.current) return;
