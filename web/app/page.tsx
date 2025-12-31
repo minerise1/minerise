@@ -14,7 +14,6 @@ export default function Home() {
   const [index, setIndex] = useState(1);
   const [hovering, setHovering] = useState(false);
   const router = useRouter();
-  const startX = useRef<number | null>(null);
   const wheelLock = useRef(false);
 
   const prev = () =>
@@ -44,19 +43,8 @@ export default function Home() {
     if (e.deltaY > 0) next();
     if (e.deltaY < 0) prev();
     wheelLock.current = true;
-    setTimeout(() => (wheelLock.current = false), 450);
+    setTimeout(() => (wheelLock.current = false), 400);
   }
-
-  const onTouchStart = (e: React.TouchEvent) =>
-    (startX.current = e.touches[0].clientX);
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (startX.current === null) return;
-    const diff = e.changedTouches[0].clientX - startX.current;
-    if (diff > 60) prev();
-    if (diff < -60) next();
-    startX.current = null;
-  };
 
   return (
     <main style={page}>
@@ -69,8 +57,6 @@ export default function Home() {
         <div
           style={carousel}
           onWheelCapture={onWheel}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
         >
@@ -78,32 +64,18 @@ export default function Home() {
 
           <div style={track}>
             {slides.map((s, i) => (
-              <TiltCard
+              <Card
                 key={i}
                 title={s.title}
                 desc={s.desc}
-                active={i === index}
                 offset={i - index}
+                active={i === index}
                 onButtonClick={() => router.push("/products")}
               />
             ))}
           </div>
 
           <button onClick={next} style={arrow}>›</button>
-        </div>
-
-        <div style={dots}>
-          {slides.map((_, i) => (
-            <span
-              key={i}
-              onClick={() => setIndex(i)}
-              style={{
-                ...dot,
-                opacity: i === index ? 1 : 0.3,
-                transform: i === index ? "scale(1.2)" : "scale(1)",
-              }}
-            />
-          ))}
         </div>
       </section>
 
@@ -112,52 +84,35 @@ export default function Home() {
   );
 }
 
-function TiltCard({
+function Card({
   title,
   desc,
-  active,
   offset,
+  active,
   onButtonClick,
 }: {
   title: string;
   desc: string;
-  active: boolean;
   offset: number;
+  active: boolean;
   onButtonClick: () => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  function onMouseMove(e: React.MouseEvent) {
-    if (!ref.current || !active) return;
-    const r = ref.current.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    const rx = ((y / r.height) - 0.5) * -10;
-    const ry = ((x / r.width) - 0.5) * 10;
-    ref.current.style.transform =
-      baseTransform(active, offset) +
-      ` rotateX(${rx}deg) rotateY(${ry}deg)`;
-  }
-
-  function reset() {
-    if (!ref.current) return;
-    ref.current.style.transform = baseTransform(active, offset);
-  }
-
   return (
     <div
-      ref={ref}
-      onMouseMove={onMouseMove}
-      onMouseLeave={reset}
       style={{
         ...card,
-        transform: baseTransform(active, offset),
+        transform: `
+          translateX(${offset * 320}px)
+          scale(${active ? 1.1 : 0.85})
+          rotateY(${offset * -20}deg)
+        `,
+        opacity: active ? 1 : 0.6,
         filter: active ? "blur(0)" : "blur(2px)",
         pointerEvents: active ? "auto" : "none",
+        zIndex: active ? 3 : 1,
         boxShadow: active
           ? "0 0 70px rgba(177,18,18,0.75)"
           : "0 20px 40px rgba(0,0,0,0.6)",
-        zIndex: active ? 2 : 1,
       }}
     >
       <h2>{title}</h2>
@@ -171,12 +126,6 @@ function TiltCard({
     </div>
   );
 }
-
-const baseTransform = (active: boolean, offset: number) => `
-  translateX(${offset * 320}px)
-  scale(${active ? 1.1 : 0.9})
-  rotateY(${offset * -25}deg)
-`;
 
 const page = { background: "#0b0b12", color: "white" };
 
@@ -216,8 +165,10 @@ const track = {
   position: "relative" as const,
   width: 960,
   height: 380,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   perspective: 1200,
-  overflow: "visible",
 };
 
 const card = {
@@ -228,7 +179,7 @@ const card = {
   borderRadius: 16,
   padding: 24,
   border: "1px solid rgba(255,255,255,0.06)",
-  transition: "transform 0.45s cubic-bezier(.22,.61,.36,1)",
+  transition: "transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.3s",
 };
 
 const cardButton = {
@@ -258,19 +209,5 @@ const arrow = {
   background: "rgba(255,255,255,0.08)",
   border: "1px solid #333",
   color: "white",
-  cursor: "pointer",
-};
-
-const dots = {
-  display: "flex",
-  gap: 10,
-  marginTop: 28,
-};
-
-const dot = {
-  width: 10,
-  height: 10,
-  borderRadius: "50%",
-  background: "linear-gradient(90deg,#b11212,#22c55e)",
   cursor: "pointer",
 };
