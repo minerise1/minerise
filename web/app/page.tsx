@@ -2,12 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Footer from "@/components/footer";
-
-const [serverStats, setServerStats] = useState({
-  online: 0,
-  max: 0,
-});
+import footer from "@/components/footer";
 
 const slides = [
   { title: "VIP Rank", desc: "Permanent rank with exclusive perks" },
@@ -15,23 +10,14 @@ const slides = [
   { title: "Bundles", desc: "Best value combined packages" },
 ];
 
-const stats = [
-  { label: "Players Online", value: serverStats.online.toString() },
-  { label: "Total Slots", value: serverStats.max.toString() },
-  { label: "Products Sold", value: "54K+" },
-  { label: "Uptime", value: "99.9%" },
-];
-
-
-const highlights = [
-  { title: "Instant Delivery", text: "Items delivered immediately after purchase." },
-  { title: "Secure Payments", text: "Protected transactions with trusted providers." },
-  { title: "Always Available", text: "Store open 24/7 worldwide." },
-];
-
 export default function Home() {
   const [index, setIndex] = useState(1);
   const [hovering, setHovering] = useState(false);
+  const [serverStats, setServerStats] = useState({
+    online: 0,
+    max: 0,
+  });
+
   const router = useRouter();
   const wheelLock = useRef(false);
 
@@ -53,6 +39,18 @@ export default function Home() {
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        setServerStats({
+          online: data.onlinePlayers ?? 0,
+          max: data.maxPlayers ?? 0,
+        });
+      })
+      .catch(() => {});
   }, []);
 
   function onWheel(e: React.WheelEvent) {
@@ -122,24 +120,25 @@ export default function Home() {
       </section>
 
       <section style={statsSection}>
-        {stats.map((s, i) => (
-          <div key={i} style={statCard}>
-            <h2 style={statValue}>{s.value}</h2>
-            <p style={statLabel}>{s.label}</p>
-          </div>
-        ))}
+        <div style={statCard}>
+          <h2 style={statValue}>{serverStats.online}</h2>
+          <p style={statLabel}>Players Online</p>
+        </div>
+        <div style={statCard}>
+          <h2 style={statValue}>{serverStats.max}</h2>
+          <p style={statLabel}>Max Slots</p>
+        </div>
+        <div style={statCard}>
+          <h2 style={statValue}>54K+</h2>
+          <p style={statLabel}>Products Sold</p>
+        </div>
+        <div style={statCard}>
+          <h2 style={statValue}>99.9%</h2>
+          <p style={statLabel}>Uptime</p>
+        </div>
       </section>
 
-      <section style={highlightsSection}>
-        {highlights.map((h, i) => (
-          <div key={i} style={highlightCard}>
-            <h3>{h.title}</h3>
-            <p style={{ opacity: 0.8 }}>{h.text}</p>
-          </div>
-        ))}
-      </section>
-
-      <Footer />
+      {footer()}
     </main>
   );
 }
@@ -234,7 +233,7 @@ const statsSection = {
   gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
   gap: 24,
   maxWidth: 1000,
-  margin: "120px auto 0",
+  margin: "120px auto",
   padding: "0 20px",
 };
 
@@ -254,20 +253,4 @@ const statValue = {
 
 const statLabel = {
   opacity: 0.8,
-};
-
-const highlightsSection = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: 24,
-  maxWidth: 1100,
-  margin: "120px auto",
-  padding: "0 20px",
-};
-
-const highlightCard = {
-  background: "#141419",
-  borderRadius: 14,
-  padding: 28,
-  border: "1px solid rgba(255,255,255,0.06)",
 };
