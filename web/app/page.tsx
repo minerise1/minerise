@@ -4,6 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/footer";
 
+const [serverStats, setServerStats] = useState({
+  online: 0,
+  max: 0,
+});
+
 const slides = [
   { title: "VIP Rank", desc: "Permanent rank with exclusive perks" },
   { title: "Gems", desc: "Purchase in-game currency packs" },
