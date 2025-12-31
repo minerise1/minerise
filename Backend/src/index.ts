@@ -6,7 +6,7 @@ import { authMiddleware, AuthRequest } from "./middleware/auth";
 import productRoutes from "./routes/products";
 import statsRoute from "./routes/stats";
 
-app.use("/stats", statsRoute);
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -29,4 +29,6 @@ app.get("/profile", authMiddleware, (req: AuthRequest, res) => {
 });
 
 app.use("/products", productRoutes);
+
+app.use("/stats", statsRoute);
 
