@@ -32,12 +32,20 @@ export default function Products() {
       });
   }, []);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/currency")
-      .then((res) => res.json())
-      .then(setRates)
-      .finally(() => setLoading(false));
-  }, []);
+ useEffect(() => {
+  fetch("http://localhost:5000/currency")
+    .then(async (res) => {
+      const text = await res.text();
+      return text ? JSON.parse(text) : {};
+    })
+    .then((data) => {
+      if (data && typeof data === "object") {
+        setRates(data);
+      }
+    })
+    .finally(() => setLoading(false));
+}, []);
+
 
   function formatPrice(usd: number): string {
   if (typeof usd !== "number") {
