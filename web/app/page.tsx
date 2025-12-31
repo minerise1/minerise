@@ -68,7 +68,7 @@ export default function Home() {
 
         <div
           style={carousel}
-          onWheel={onWheel}
+          onWheelCapture={onWheel}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
           onMouseEnter={() => setHovering(true)}
@@ -209,6 +209,7 @@ const carousel = {
   display: "flex",
   alignItems: "center",
   gap: 40,
+  overscrollBehavior: "contain" as const,
 };
 
 const track = {
