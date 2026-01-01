@@ -11,15 +11,11 @@ router.get("/", async (_, res) => {
       return res.json(cachedRates);
     }
 
-    if (typeof fetch !== "function") {
-      throw new Error("fetch not available");
-    }
-
-    const response = await fetch("https://api.exchangerate.host/latest?base=USD");
+    const response = await fetch("https://open.er-api.com/v6/latest/USD");
     const data = await response.json();
 
-    if (!data || !data.rates) {
-      throw new Error("invalid exchange data");
+    if (!data || data.result !== "success" || !data.rates) {
+      throw new Error("Invalid exchange API response");
     }
 
     cachedRates = data.rates;
@@ -34,6 +30,8 @@ router.get("/", async (_, res) => {
       EUR: 0.92,
       GBP: 0.79,
       INR: 83,
+      AUD: 1.52,
+      CAD: 1.36,
     });
   }
 });
