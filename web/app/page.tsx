@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import footer from "@/components/footer";
 import SneakPeek from "@/components/SneakPeek";
-
+import ServerStatusPanel from "@/components/ServerStatusPanel";
 
 const slides = [
   { title: "VIP Rank", desc: "Permanent rank with exclusive perks" },
@@ -35,7 +35,7 @@ export default function Home() {
   }, [hovering]);
 
   useEffect(() => {
-    const h = (e: any) => {
+    const h = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") prev();
       if (e.key === "ArrowRight") next();
     };
@@ -57,7 +57,6 @@ export default function Home() {
 
   function onWheel(e: React.WheelEvent) {
     e.preventDefault();
-    e.stopPropagation();
     if (wheelLock.current) return;
     if (e.deltaY > 0) next();
     if (e.deltaY < 0) prev();
@@ -67,6 +66,7 @@ export default function Home() {
 
   return (
     <main style={page}>
+      {/* HERO */}
       <section style={hero}>
         <h1 style={heroTitle}>MineRise Store</h1>
         <p style={heroSubtitle}>
@@ -96,10 +96,6 @@ export default function Home() {
                   filter: i === index ? "blur(0)" : "blur(2px)",
                   pointerEvents: i === index ? "auto" : "none",
                   zIndex: i === index ? 3 : 1,
-                  boxShadow:
-                    i === index
-                      ? "0 0 70px rgba(177,18,18,0.75)"
-                      : "0 20px 40px rgba(0,0,0,0.6)",
                 }}
               >
                 <h2>{s.title}</h2>
@@ -120,9 +116,14 @@ export default function Home() {
           <button onClick={next} style={arrow}>›</button>
         </div>
       </section>
-       
-       <SneakPeek />
 
+      {/* SNEAK PEEK */}
+      <SneakPeek />
+
+      {/* LIVE SERVER STATUS (ODOMETER) */}
+      <ServerStatusPanel />
+
+      {/* LEGACY STATS GRID */}
       <section style={statsSection}>
         <div style={statCard}>
           <h2 style={statValue}>{serverStats.online}</h2>
@@ -147,62 +148,30 @@ export default function Home() {
   );
 }
 
-<SneakPeek />
-
+/* ================= STYLES ================= */
 
 const page = { background: "#0b0b12", color: "white" };
 
 const hero = {
   minHeight: "100vh",
-  background: `
-    radial-gradient(circle at top, rgba(177,18,18,0.45), transparent 55%),
-    radial-gradient(circle at bottom, rgba(34,197,94,0.15), transparent 60%),
-    #0b0b12
-  `,
   display: "flex",
   flexDirection: "column" as const,
   alignItems: "center",
   justifyContent: "center",
 };
 
-const heroTitle = {
-  fontSize: 60,
-  fontWeight: 900,
-  textShadow: "0 0 30px rgba(177,18,18,0.6)",
-};
+const heroTitle = { fontSize: 60, fontWeight: 900 };
+const heroSubtitle = { fontSize: 18, opacity: 0.8, marginBottom: 40 };
 
-const heroSubtitle = {
-  fontSize: 18,
-  color: "#d1d5db",
-  marginBottom: 40,
-};
-
-const carousel = {
-  display: "flex",
-  alignItems: "center",
-  gap: 40,
-  overscrollBehavior: "contain" as const,
-};
-
-const track = {
-  position: "relative" as const,
-  width: 960,
-  height: 380,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  perspective: 1200,
-};
-
+const carousel = { display: "flex", alignItems: "center", gap: 40 };
+const track = { position: "relative" as const, width: 960, height: 380 };
 const card = {
   position: "absolute" as const,
   width: 280,
   height: 360,
-  background: "linear-gradient(180deg,#1b1b21,#101014)",
+  background: "#141419",
   borderRadius: 16,
   padding: 24,
-  border: "1px solid rgba(255,255,255,0.06)",
-  transition: "transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.3s",
 };
 
 const cardButton = {
@@ -213,15 +182,12 @@ const cardButton = {
   borderRadius: 8,
   color: "white",
   fontWeight: 700,
-  cursor: "pointer",
 };
 
 const glow = {
   position: "absolute" as const,
   inset: -20,
-  background:
-    "radial-gradient(circle, rgba(177,18,18,0.25), transparent 60%)",
-  zIndex: -1,
+  background: "radial-gradient(circle, rgba(177,18,18,0.25), transparent 60%)",
 };
 
 const arrow = {
@@ -229,10 +195,6 @@ const arrow = {
   width: 48,
   height: 48,
   borderRadius: "50%",
-  background: "rgba(255,255,255,0.08)",
-  border: "1px solid #333",
-  color: "white",
-  cursor: "pointer",
 };
 
 const statsSection = {
@@ -241,7 +203,6 @@ const statsSection = {
   gap: 24,
   maxWidth: 1000,
   margin: "120px auto",
-  padding: "0 20px",
 };
 
 const statCard = {
@@ -249,15 +210,7 @@ const statCard = {
   borderRadius: 14,
   padding: 24,
   textAlign: "center" as const,
-  border: "1px solid rgba(255,255,255,0.06)",
 };
 
-const statValue = {
-  fontSize: 36,
-  fontWeight: 900,
-  color: "#22c55e",
-};
-
-const statLabel = {
-  opacity: 0.8,
-};
+const statValue = { fontSize: 36, fontWeight: 900 };
+const statLabel = { opacity: 0.8 };
