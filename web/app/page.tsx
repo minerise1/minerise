@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import footer from "@/components/footer";
+import SneakPeek from "@/components/SneakPeek";
+
 
 const slides = [
   { title: "VIP Rank", desc: "Permanent rank with exclusive perks" },
@@ -118,6 +120,8 @@ export default function Home() {
           <button onClick={next} style={arrow}>›</button>
         </div>
       </section>
+       
+       <SneakPeek />
 
       <section style={statsSection}>
         <div style={statCard}>
@@ -142,6 +146,9 @@ export default function Home() {
     </main>
   );
 }
+
+<SneakPeek />
+
 
 const page = { background: "#0b0b12", color: "white" };
 

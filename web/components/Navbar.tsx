@@ -5,6 +5,8 @@ import { useState } from "react";
 import { ShoppingCart, User, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
+import Image from "next/image";
+
 
 export default function Navbar() {
   const { items } = useCart();
@@ -16,9 +18,16 @@ export default function Navbar() {
   return (
     <nav style={nav}>
       <Link href="/" style={logo}>
-        <img src="/logo.png" height={36} />
-        <span>MineRise</span>
-      </Link>
+  <Image
+    src="/logo.png"
+    alt="MineRise Logo"
+    width={36}
+    height={36}
+    priority
+  />
+  <span>MineRise</span>
+</Link>
+
 
       <div style={right}>
         <Link href="/products" style={link}>Store</Link>
