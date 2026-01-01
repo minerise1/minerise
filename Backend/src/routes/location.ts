@@ -1,20 +1,28 @@
 import express from "express";
-import fetch from "node-fetch";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const ip =
-    (req.headers["x-forwarded-for"] as string)?.split(",")[0] ||
-    req.socket.remoteAddress;
+router.get("/", async (_, res) => {
+  try {
+    const response = await fetch("https://ipapi.co/json/");
+    const data = await response.json();
 
-  const response = await fetch(`https://ipapi.co/json/`);
-  const data = await response.json();
+    if (!data || !data.currency) {
+      throw new Error("Invalid IP data");
+    }
 
-  res.json({
-    country: data.country_code,
-    currency: data.currency,
-  });
+    res.json({
+      country: data.country_code,
+      currency: data.currency,
+    });
+  } catch (err) {
+    console.error("Location route error:", err);
+
+    res.json({
+      country: "US",
+      currency: "USD",
+    });
+  }
 });
 
 export default router;
